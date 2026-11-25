@@ -8,7 +8,7 @@
   // ---------------------------------------------------------------- data
   // 4 cake types. cake index == assets/cakeN.webp / sliceN.webp / cardN.webp
   var TYPES = [
-    { id: 'warm', cake: 1, sub: '하루의 끝에 닿는', title: '해 질 녘 조개 케이크',
+    { id: 'warm', cake: 1, sub: '하루의 끝에 닿는', title: '노을빛 파도 케이크',
       chips: ['다정함', '노을'], slot: '고마움',
       desc: function (p, k) { return "'" + p + "'에서 " + k + '에 담긴 다정함이 느껴졌어요. 그래서 노을빛 파도와 조개를 얹었어요.'; } },
     { id: 'love', cake: 2, sub: '살며시 피어나는', title: '봄날의 안부 케이크',
