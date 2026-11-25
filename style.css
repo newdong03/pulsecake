@@ -79,7 +79,7 @@ button{font-family:inherit;border:0;cursor:pointer;background:none}
 .chips{position:absolute;left:0;right:0;top:673px;display:flex;justify-content:center;gap:10px;flex-wrap:nowrap}
 .chip{height:46px;padding:0 24px;border-radius:23px;background:var(--pink-soft);color:var(--pink);font-weight:700;font-size:19px;
   display:flex;align-items:center;white-space:nowrap}
-.r-desc{position:absolute;left:147px;width:540px;top:756px;text-align:center;font-weight:500;font-size:22px;line-height:37px;color:var(--text);word-break:keep-all}
+.r-desc{white-space:pre-line;position:absolute;left:147px;width:540px;top:756px;text-align:center;font-weight:500;font-size:22px;line-height:37px;color:var(--text);word-break:keep-all}
 .hint{position:absolute;left:426px;width:307px;top:897px;text-align:center;font-weight:500;font-size:15px;line-height:22px;color:var(--pink)}
 
 /* ---------- reply 1 ---------- */

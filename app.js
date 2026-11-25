@@ -10,16 +10,16 @@
   var TYPES = [
     { id: 'warm', cake: 1, sub: '하루의 끝에 닿는', title: '노을빛 파도 케이크',
       chips: ['다정함', '노을'], slot: '고마움',
-      desc: function (p, k) { return "'" + p + "'에서 " + k + '에 담긴 다정함이 느껴졌어요. 그래서 노을빛 파도와 조개를 얹었어요.'; } },
+      desc: function (p, k) { return "'" + p + "'에서 " + k + '에 담긴 다정함이 느껴졌어요. \n그래서 노을빛 파도를 얹었어요.'; } },
     { id: 'love', cake: 2, sub: '살며시 피어나는', title: '봄날의 안부 케이크',
       chips: ['설렘', '봄날'], slot: '그리움',
-      desc: function (p, k) { return "'" + p + "'" + josa(p, '이라는', '라는') + ' 말이 봄꽃처럼 ' + k + '의 기억으로 오래 남았어요. 그래서 꽃잎을 올린 케이크를 구웠어요.'; } },
+      desc: function (p, k) { return "'" + p + "'" + josa(p, '이라는', '라는') + ' 말이 봄꽃처럼 ' + k + '의 기억으로 오래 남았어요. \n그래서 꽃잎을 올린 케이크를 구웠어요.'; } },
     { id: 'cheer', cake: 3, sub: '마음이 시원해지는', title: '청량한 파도 케이크',
       chips: ['활기', '청량함'], slot: '웃음',
-      desc: function (p, k) { return "'" + p + "'에서 " + k + '처럼 환하게 번지는 활기가 느껴졌어요. 그래서 물빛 크림과 조개를 올렸어요.'; } },
-    { id: 'steady', cake: 4, sub: '천천히 걷고 싶은', title: '풀잎 소풍 케이크',
+      desc: function (p, k) { return "'" + p + "'에서 " + k + '처럼 환하게 번지는 활기가 느껴졌어요. \n그래서 물빛 크림과 파도를 올렸어요.'; } },
+    { id: 'steady', cake: 4, sub: '묵묵히 곁을 지켜주는', title: '풀잎 소풍 케이크',
       chips: ['든든함', '편안함'], slot: '믿음',
-      desc: function (p, k) { return "'" + p + "'에서 " + k + '만큼 든든한 마음이 느껴졌어요. 그래서 초록빛 크림과 잎을 얹었어요.'; } }
+      desc: function (p, k) { return "'" + p + "'에서 " + k + '만큼 든든한 마음이 느껴졌어요. \n그래서 초록빛 크림과 잎을 얹었어요.'; } }
   ];
 
   // offline fallback dictionary (used only when the AI call fails)
