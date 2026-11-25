@@ -58,7 +58,8 @@ button{font-family:inherit;border:0;cursor:pointer;background:none}
 .btn-pink{background:var(--pink);color:#fff}
 .btn-grey{background:var(--grey-btn);color:var(--gray)}
 .btn-white{background:#fff;color:var(--text)}
-.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled{opacity:1;cursor:default}
+.btn-pink:disabled{background:#FFC5E5;color:#fff}
 
 /* ---------- loading ---------- */
 .loading-text{letter-spacing:0;position:absolute;left:0;right:0;top:526px;text-align:center;font-family:var(--en);font-weight:500;font-size:28px;line-height:44px;color:var(--gray)}
