@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Meet your Cake · pulse</title>
+<link rel="icon" href="assets/symbol.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ 5-screen booth experience (iPad 834 x 1194) ============ -->
+<div id="stage">
+  <div class="bg"></div>
+
+  <!-- 1. main -->
+  <section class="screen active" id="s-main">
+    <h1 class="title">Meet your Cake<img class="cap" src="assets/cap.png" alt=""></h1>
+    <p class="subtitle">내가 가장 기억하는 축하 한 마디로,<br>올해 내게 올 케이크를 만나고 마음을 전해요.</p>
+    <p class="label label-main">Q. 친구에게 받았던 생일 메시지중 기억에 남는 문구를 작성해주세요.</p>
+    <div class="field field-main">
+      <textarea id="in-main" maxlength="200" aria-label="기억에 남는 생일 메시지"></textarea>
+      <span class="counter" id="cnt-main">(0/200)</span>
+    </div>
+    <button class="btn btn-pink btn-center" id="btn-submit-main" disabled>Submit</button>
+  </section>
+
+  <!-- 2. loading -->
+  <section class="screen" id="s-loading">
+    <p class="loading-text">Baking your cake<span class="dots"><i>.</i><i>.</i><i>.</i></span></p>
+  </section>
+
+  <!-- 3. result -->
+  <section class="screen" id="s-result">
+    <p class="r-sub" id="r-sub"></p>
+    <h2 class="r-title" id="r-title"></h2>
+    <div class="glow glow-cake"></div>
+    <div class="cake-box"><img id="r-cake" alt=""></div>
+    <div class="chips" id="r-chips"></div>
+    <p class="r-desc" id="r-desc"></p>
+    <p class="hint">친구에게 감사를 전해볼까요?</p>
+    <button class="btn btn-grey btn-left" id="btn-finish-result">Finish</button>
+    <button class="btn btn-pink btn-right" id="btn-reply">Reply</button>
+  </section>
+
+  <!-- 4. reply 1 -->
+  <section class="screen" id="s-reply1">
+    <div class="glow glow-slice"></div>
+    <div class="slice-box"><img id="r1-slice" alt=""></div>
+    <p class="label label-reply">Q. 친구에게 전하고 싶은 진심을 작성해주세요.</p>
+    <div class="field field-reply">
+      <textarea id="in-reply" maxlength="50" aria-label="친구에게 전하고 싶은 진심"></textarea>
+      <span class="counter" id="cnt-reply">(0/50)</span>
+    </div>
+    <button class="btn btn-pink btn-center" id="btn-submit-reply" disabled>Submit</button>
+  </section>
+
+  <!-- 5. reply 2 -->
+  <section class="screen" id="s-reply2">
+    <div class="card-wrap"><img id="r2-card" alt="친구에게 전할 카드"></div>
+    <button class="btn btn-white btn-left" id="btn-download">Download</button>
+    <button class="btn btn-pink btn-right" id="btn-finish-reply">Finish</button>
+  </section>
+
+  <!-- QR modal -->
+  <div class="modal" id="qr-modal" aria-hidden="true">
+    <div class="modal-card">
+      <p class="modal-title">QR을 스캔하면<br>내 폰에서 카드를 저장할 수 있어요</p>
+      <div class="qr" id="qr-box"></div>
+      <button class="btn btn-pink btn-modal" id="btn-qr-close">Close</button>
+    </div>
+  </div>
+
+  <button class="symbol" id="symbol" aria-label="처음으로"><img src="assets/symbol.svg" alt=""></button>
+</div>
+
+<!-- ============ Phone view (opened from QR) ============ -->
+<div id="viewer">
+  <div class="bg"></div>
+  <button class="symbol symbol-v" aria-hidden="true" tabindex="-1"><img src="assets/symbol.svg" alt=""></button>
+  <div class="v-inner">
+    <img id="v-card" alt="친구가 보낸 카드">
+    <p class="v-hint">이미지를 길게 눌러 저장할 수도 있어요</p>
+    <button class="btn btn-pink v-btn" id="v-save">Save image</button>
+  </div>
+</div>
+
+<script src="qrcode.js"></script>
+<script src="cards-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
