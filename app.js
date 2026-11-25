@@ -1,6 +1,6 @@
 /* Meet your Cake — booth experience
  * Flow: main → loading → result → reply1 → reply2 (+ QR → phone viewer)
- * Message analysis: /api/classify (Claude Haiku) with an offline keyword fallback.
+ * Message analysis: local word dictionary (no API).
  */
 (function () {
   'use strict';
@@ -22,14 +22,43 @@
       desc: function (p, k) { return "'" + p + "'에서 " + k + '만큼 든든한 마음이 느껴졌어요. \n그래서 초록빛 크림과 잎을 얹었어요.'; } }
   ];
 
-  // offline fallback dictionary (used only when the AI call fails)
+  // ---------------------------------------------------------------- word dictionary
+  // Message analysis runs fully in the browser (no API). Each type has a list of word stems;
+  // the type with the most distinct matches wins. Edit these lists freely to tune the result.
   var DICT = [
-    ['고마', '감사', '챙겨', '곁', '옆에', '함께', '따뜻', '다정', '걱정', '보살', '밥', '간식', '선물', '늘 ', '항상', '노을', '바다'],
-    ['예쁘', '이쁘', '사랑', '좋아', '설레', '보고싶', '보고 싶', '그립', '추억', '처음', '웃는', '귀엽', '반짝', '벚꽃', '봄', '꽃', '두근'],
-    ['웃', 'ㅋㅋ', '재밌', '재미', '신나', '응원', '화이팅', '파이팅', '힘내', '에너지', '놀', '여행', '노래방', '운동', '파티', '최고', '대박', '시원'],
-    ['믿', '든든', '위로', '힘이 됐', '힘이 되', '괜찮', '성장', '인정', '지켜', '버텨', '기대', '안심', '편안', '묵묵', '산책', '이겨', '해낼', '할 수 있', '쉬어']
+    // 0 다정형 — 고마움, 챙김, 따뜻한 배려
+    ['고마', '감사', '챙겨', '챙기', '챙겼', '곁', '옆에', '따뜻', '다정', '걱정', '보살', '배려', '신경 써', '신경써', '마음 써', '마음써',
+     '기억해', '잊지 않', '잊지않', '알아봐', '알아주', '알아채', '먼저 연락', '연락해', '전화', '안부', '편지', '손편지', '카드', '선물', '케이크',
+     '초대', '준비해', '밥', '간식', '커피', '음료', '미역국', '도시락', '데리러', '바래다', '마중', '밤새', '새벽', '일부러', '말없이', '조용히',
+     '늘 ', '항상', '언제나', '한결같', '소중', '행복했', '눈물', '울컥', '뭉클', '감동', '노을', '정성', '손수', '직접 만', '직접 쓴', '직접 골',
+     '덕분', '덕에', '받았', '주셔서', '해줘서', '해줬', '해주셔서', '미안', '다독', '품', '포근', '온기', '쌀쌀', '추운', '우산', '담요', '핫팩'],
+    // 1 설렘형 — 사랑, 설렘, 그리움, 추억
+    ['예쁘', '이쁘', '사랑', '좋아해', '좋아하', '설레', '설렜', '두근', '보고싶', '보고 싶', '그립', '그리웠', '추억', '처음 만', '처음 봤', '첫눈',
+     '첫 만남', '웃는 모습', '귀엽', '반짝', '빛나', '벚꽃', '봄', '꽃', '장미', '향기', '사진', '필름', '영화', '데이트', '연애', '고백', '커플',
+     '남자친구', '여자친구', '애인', '썸', '로맨', '달콤', '분홍', '핑크', '하트', '스쳐', '마음에 남', '오래 기억', '잊을 수 없', '잊지 못', '떠올',
+     '생각나', '생각이 나', '눈이 마주', '눈빛', '심장', '꿈', '별', '달빛', '밤하늘', '노래 가사', '가사', '시간이 멈', '운명', '인연', '미소',
+     '아름다', '멋지', '매력', '빠졌', '반했', '반해', '첫사랑', '오래전', '그날', '그때', '옛날', '어릴 때', '어렸을'],
+    // 2 활기형 — 웃음, 신남, 에너지, 응원
+    ['웃', 'ㅋㅋ', 'ㅎㅎ', '재밌', '재미', '웃겨', '웃기', '폭소', '빵 터', '신나', '신났', '즐거', '즐겼', '응원', '화이팅', '파이팅', '힘내', '힘났',
+     '에너지', '활기', '텐션', '놀', '여행', '노래방', '노래', '춤', '운동', '헬스', '러닝', '축구', '농구', '게임', '파티', '클럽', '페스티벌',
+     '콘서트', '최고', '대박', '짱', '미쳤', '레전드', '분위기', '시원', '청량', '바다', '여름', '물놀이', '수영', '캠핑', '드라이브', '맛집',
+     '먹방', '치맥', '술', '건배', '소리 질', '박수', '함성', '이벤트', '깜짝', '서프라이즈', '장난', '개그', '드립', '밝', '유쾌', '활발',
+     '에너제틱', '인싸', '핵', '짜릿', '두근두근', '신선', '새로운', '도전', '모험', '여행지', '불꽃', '폭죽', '축제', '난리', '떠들', '웃음'],
+    // 3 든든형 — 믿음, 위로, 곁을 지켜줌, 응원 이상의 버팀
+    ['믿', '든든', '위로', '힘이 됐', '힘이 되', '힘이 돼', '괜찮', '성장', '인정', '지켜', '버텨', '기대', '안심', '편안', '묵묵', '산책', '이겨',
+     '해낼', '할 수 있', '쉬어', '쉬엄', '용기', '자신감', '포기하지', '포기 안', '끝까지', '같이 있', '곁에 있', '들어줘', '들어주', '들어줬',
+     '이야기 들', '고민', '상담', '조언', '충고', '진심', '솔직', '변함', '변치', '오래된', '오랜 친구', '오랫동안', '시간이 지나도', '힘든 시기',
+     '힘들 때', '힘들었', '지쳤', '지칠', '어려운', '위기', '시험', '취업', '합격', '졸업', '인턴', '면접', '취준', '도와', '도움', '의지', '버팀목',
+     '기둥', '어깨', '토닥', '안아', '안겨', '숲', '나무', '풀', '소풍', '쉼', '휴식', '평온', '차분', '여유', '느긋', '천천히', '믿음직', '책임',
+     '약속', '지지', '든든히', '응급', '병원', '아플', '아팠', '몸살', '간호', '함께 있']
   ];
-  var NOUNS = ['간식', '편지', '선물', '노래방', '노래', '여행', '웃음', '응원', '믿음', '위로', '추억', '미소', '산책', '바다', '벚꽃', '봄', '밤', '밥', '커피', '친구', '시험', '사진', '목소리', '말'];
+  // literal nouns that can become the 3rd chip (and the end of the quoted phrase), grouped by type
+  var NOUNS = [
+    ['간식', '편지', '선물', '케이크', '도시락', '커피', '미역국', '밥', '안부', '전화', '카드', '배려', '정성', '노을', '손편지', '우산', '담요'],
+    ['벚꽃', '봄', '꽃', '꽃다발', '사진', '추억', '사랑', '미소', '눈빛', '향기', '영화', '데이트', '별', '밤하늘', '첫눈', '그리움', '장미', '가사'],
+    ['웃음', '노래방', '노래', '여행', '응원', '파티', '바다', '여름', '운동', '춤', '드라이브', '캠핑', '맛집', '게임', '박수', '에너지', '농담', '장난'],
+    ['믿음', '위로', '산책', '어깨', '조언', '상담', '고민', '시험', '합격', '졸업', '용기', '숲', '약속', '진심', '지지', '면접', '휴식']
+  ];
 
   // ---------------------------------------------------------------- helpers
   var $ = function (s) { return document.querySelector(s); };
@@ -108,21 +137,29 @@
   });
 
   // ---------------------------------------------------------------- analysis
-  function localClassify(text) {
+  function hash(str) { var h = 0; for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0; return h; }
+
+  function classify(text) {
     var scores = [0, 0, 0, 0];
     DICT.forEach(function (words, i) {
       words.forEach(function (w) { if (text.indexOf(w) >= 0) scores[i]++; });
     });
-    var best = 0, tie = false;
-    for (var i = 1; i < 4; i++) {
-      if (scores[i] > scores[best]) { best = i; tie = false; }
-      else if (scores[i] === scores[best]) tie = true;
+    var max = Math.max.apply(null, scores);
+    var tied = [];
+    scores.forEach(function (v, i) { if (v === max) tied.push(i); });
+    // no match or a tie: pick deterministically from the text, so the same message always gives the same cake
+    var best = tied.length === 1 ? tied[0] : tied[hash(text) % tied.length];
+
+    // chip keyword: earliest noun of the winning type, otherwise earliest noun of any type
+    function firstNoun(list) {
+      var found = '', pos = 1e9;
+      list.forEach(function (n) { var p = text.indexOf(n); if (p >= 0 && p < pos) { pos = p; found = n; } });
+      return found;
     }
-    if (scores[best] === 0 || (tie && scores[best] === 0)) best = 0;
-    var kw = '';
-    for (var n = 0; n < NOUNS.length; n++) { if (text.indexOf(NOUNS[n]) >= 0) { kw = NOUNS[n]; break; } }
-    var phrase;
-    var ki = kw ? text.indexOf(kw) : -1;
+    var kw = firstNoun(NOUNS[best]);
+    if (!kw) kw = firstNoun([].concat.apply([], NOUNS));
+
+    var phrase, ki = kw ? text.indexOf(kw) : -1;
     if (ki >= 0) { // short window ending at the keyword, trimmed to a word boundary
       var end = ki + kw.length, start = Math.max(0, end - 12);
       if (start > 0 && text.charAt(start - 1) !== ' ') {
@@ -136,25 +173,7 @@
     return { type: best, phrase: phrase, keyword: kw };
   }
 
-  function aiClassify(text) {
-    var ctrl = new AbortController();
-    var timer = setTimeout(function () { ctrl.abort(); }, 7000);
-    return fetch('api/classify', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text }), signal: ctrl.signal
-    }).then(function (r) {
-      clearTimeout(timer);
-      if (!r.ok) throw new Error('api ' + r.status);
-      return r.json();
-    }).then(function (d) {
-      if (typeof d.type !== 'number' || d.type < 0 || d.type > 3) throw new Error('bad type');
-      return { type: d.type, phrase: String(d.phrase || '').slice(0, 20), keyword: String(d.keyword || '').slice(0, 8) };
-    });
-  }
-
-  function analyze(text) {
-    return aiClassify(text).catch(function () { return localClassify(text); });
-  }
+  function analyze(text) { return Promise.resolve(classify(text)); }
 
   // ---------------------------------------------------------------- result
   function showResult(res) {
@@ -167,7 +186,8 @@
     $('#r-sub').textContent = t.sub;
     $('#r-title').textContent = t.title;
     $('#r-cake').src = 'assets/cake' + t.cake + '.webp';
-    $('#r-desc').textContent = t.desc(phrase, kw);
+    // avoid repeating the same word twice in one sentence ("…간식'에서 간식에 담긴…")
+    $('#r-desc').textContent = t.desc(phrase, phrase.indexOf(kw) >= 0 ? t.slot : kw);
     var chips = $('#r-chips'); chips.innerHTML = '';
     t.chips.concat([kw]).forEach(function (c) {
       var el = document.createElement('span'); el.className = 'chip'; el.textContent = c; chips.appendChild(el);
