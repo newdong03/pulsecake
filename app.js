@@ -240,6 +240,7 @@
       var lines;
       for (;;) {
         ctx.font = '600 ' + size + 'px ' + fam;
+        if ('letterSpacing' in ctx) ctx.letterSpacing = (-0.03 * size) + 'px'; // -3%
         lines = wrapLines(ctx, text, maxW);
         if (lines.length <= 3 || size <= 38) break;
         size -= 2;
