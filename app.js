@@ -9,16 +9,16 @@
   // 4 cake types. cake index == assets/cakeN.webp / sliceN.webp / cardN.webp
   var TYPES = [
     { id: 'warm', cake: 1, sub: '하루의 끝에 닿는', title: '노을빛 파도 케이크',
-      chips: ['다정함', '노을'], slot: '고마움',
+      chips: ['다정함', '노을'], slot: '고마움', slot2: '정성', quote: '그 한 마디',
       desc: function (p, k) { return "'" + p + "'에서 " + k + '에 담긴 다정함이 느껴졌어요. \n그래서 노을빛 파도를 얹었어요.'; } },
     { id: 'love', cake: 2, sub: '살며시 피어나는', title: '봄날의 안부 케이크',
-      chips: ['설렘', '봄날'], slot: '그리움',
+      chips: ['설렘', '봄날'], slot: '그리움', slot2: '추억', quote: '그 한 마디',
       desc: function (p, k) { return "'" + p + "'" + josa(p, '이라는', '라는') + ' 말이 봄꽃처럼 ' + k + '의 기억으로 오래 남았어요. \n그래서 꽃잎을 올린 케이크를 구웠어요.'; } },
     { id: 'cheer', cake: 3, sub: '마음이 시원해지는', title: '청량한 파도 케이크',
-      chips: ['활기', '청량함'], slot: '웃음',
+      chips: ['활기', '청량함'], slot: '웃음', slot2: '에너지', quote: '그 한 마디',
       desc: function (p, k) { return "'" + p + "'에서 " + k + '처럼 환하게 번지는 활기가 느껴졌어요. \n그래서 물빛 크림과 파도를 올렸어요.'; } },
     { id: 'steady', cake: 4, sub: '묵묵히 곁을 지켜주는', title: '풀잎 소풍 케이크',
-      chips: ['든든함', '편안함'], slot: '믿음',
+      chips: ['든든함', '편안함'], slot: '믿음', slot2: '위로', quote: '그 한 마디',
       desc: function (p, k) { return "'" + p + "'에서 " + k + '만큼 든든한 마음이 느껴졌어요. \n그래서 초록빛 크림과 잎을 얹었어요.'; } }
   ];
 
@@ -54,11 +54,23 @@
   ];
   // literal nouns that can become the 3rd chip (and the end of the quoted phrase), grouped by type
   var NOUNS = [
-    ['간식', '편지', '선물', '케이크', '도시락', '커피', '미역국', '밥', '안부', '전화', '카드', '배려', '정성', '노을', '손편지', '우산', '담요'],
+    ['간식', '편지', '도시락', '커피', '미역국', '밥', '안부', '전화', '카드', '배려', '정성', '노을', '손편지', '우산', '담요'],
     ['벚꽃', '봄', '꽃', '꽃다발', '사진', '추억', '사랑', '미소', '눈빛', '향기', '영화', '데이트', '별', '밤하늘', '첫눈', '그리움', '장미', '가사'],
-    ['웃음', '노래방', '노래', '여행', '응원', '파티', '바다', '여름', '운동', '춤', '드라이브', '캠핑', '맛집', '게임', '박수', '에너지', '농담', '장난'],
+    ['웃음', '노래방', '노래', '여행', '응원', '바다', '여름', '운동', '춤', '드라이브', '캠핑', '맛집', '게임', '박수', '에너지', '농담', '장난'],
     ['믿음', '위로', '산책', '어깨', '조언', '상담', '고민', '시험', '합격', '졸업', '용기', '숲', '약속', '진심', '지지', '면접', '휴식']
   ];
+
+  // word stems that are not nouns themselves → the noun shown to the user
+  var LABEL = {
+    '고마': '고마움', '감사': '감사', '챙겨': '챙김', '챙기': '챙김', '챙겼': '챙김', '걱정': '걱정', '배려': '배려', '감동': '감동', '뭉클': '뭉클함', '울컥': '뭉클함',
+    '기억해': '기억', '잊지 않': '기억', '정성': '정성', '덕분': '덕분', '온기': '온기', '포근': '포근함',
+    '보고싶': '그리움', '보고 싶': '그리움', '그립': '그리움', '그리웠': '그리움', '예쁘': '예쁨', '이쁘': '예쁨', '사랑': '사랑', '좋아해': '좋아함', '좋아하': '좋아함',
+    '귀엽': '귀여움', '반짝': '반짝임', '빛나': '반짝임', '고백': '고백', '인연': '인연', '매력': '매력', '첫사랑': '첫사랑', '그날': '그날', '설레': '설렘', '설렜': '설렘', '두근': '설렘',
+    '재밌': '재미', '재미': '재미', '웃겨': '웃음', '웃기': '웃음', '웃': '웃음', 'ㅋㅋ': '웃음', '신나': '신남', '신났': '신남', '즐거': '즐거움', '즐겼': '즐거움',
+    '응원': '응원', '화이팅': '응원', '파이팅': '응원', '힘내': '응원', '에너지': '에너지', '텐션': '텐션', '도전': '도전', '모험': '모험', '축제': '축제',
+    '믿': '믿음', '든든': '든든함', '위로': '위로', '버텨': '버팀', '성장': '성장', '인정': '인정', '안심': '안심', '용기': '용기', '진심': '진심', '도움': '도움', '도와': '도움',
+    '조언': '조언', '고민': '고민', '의지': '의지', '묵묵': '묵묵함', '끝까지': '끝까지', '약속': '약속', '책임': '책임', '여유': '여유', '휴식': '휴식'
+  };
 
   // ---------------------------------------------------------------- helpers
   var $ = function (s) { return document.querySelector(s); };
@@ -150,27 +162,24 @@
     // no match or a tie: pick deterministically from the text, so the same message always gives the same cake
     var best = tied.length === 1 ? tied[0] : tied[hash(text) % tied.length];
 
-    // chip keyword: earliest noun of the winning type, otherwise earliest noun of any type
-    function firstNoun(list) {
-      var found = '', pos = 1e9;
-      list.forEach(function (n) { var p = text.indexOf(n); if (p >= 0 && p < pos) { pos = p; found = n; } });
-      return found;
-    }
-    var kw = firstNoun(NOUNS[best]);
-    if (!kw) kw = firstNoun([].concat.apply([], NOUNS));
-
-    var phrase, ki = kw ? text.indexOf(kw) : -1;
-    if (ki >= 0) { // short window ending at the keyword, trimmed to a word boundary
-      var end = ki + kw.length, start = Math.max(0, end - 12);
-      if (start > 0 && text.charAt(start - 1) !== ' ') {
-        var sp = text.indexOf(' ', start); start = (sp >= 0 && sp < end) ? sp + 1 : start;
+    // candidate words found in the message, with the type they belong to (very common words like 생일/축하 are never in the lists)
+    var cands = [];
+    function add(word, pos, type) { if (pos >= 0) cands.push({ w: word, p: pos, t: type }); }
+    NOUNS.forEach(function (list, i) { list.forEach(function (n) { add(n, text.indexOf(n), i); }); });
+    DICT.forEach(function (list, i) { list.forEach(function (st) { if (LABEL[st]) add(LABEL[st], text.indexOf(st), i); }); });
+    cands.sort(function (x, y) { return x.p - y.p; });
+    function pick(typeOnly, skip) {
+      for (var i = 0; i < cands.length; i++) {
+        var c = cands[i];
+        if (typeOnly && c.t !== best) continue;
+        if (skip.some(function (k) { return k && (k.indexOf(c.w) >= 0 || c.w.indexOf(k) >= 0); })) continue;
+        return c.w;
       }
-      phrase = text.slice(start, end).trim();
-    } else {
-      var clause = (text.split(/[.,!?~\n]+/).map(function (s) { return s.trim(); }).filter(function (s) { return s.length >= 3; })[0]) || text.trim();
-      phrase = clause.length > 16 ? clause.slice(0, 15).trim() + '…' : clause;
+      return '';
     }
-    return { type: best, phrase: phrase, keyword: kw };
+    var quoted = pick(true, []) || pick(false, []);
+    var kw = pick(true, [quoted]);
+    return { type: best, phrase: quoted, keyword: kw };
   }
 
   function analyze(text) { return Promise.resolve(classify(text)); }
@@ -178,16 +187,16 @@
   // ---------------------------------------------------------------- result
   function showResult(res) {
     var t = TYPES[res.type];
-    var phrase = (res.phrase || '').trim() || '그 한 마디';
+    var phrase = (res.phrase || '').trim() || t.quote;
     var kw = (res.keyword || '').trim();
-    if (!kw || t.chips.indexOf(kw) >= 0) kw = t.slot;
+    var taken = t.chips.concat([phrase]);
+    if (!kw || taken.indexOf(kw) >= 0) kw = taken.indexOf(t.slot) < 0 ? t.slot : t.slot2;
     state.typeIdx = res.type; state.cake = t.cake; state.phrase = phrase; state.keyword = kw;
 
     $('#r-sub').textContent = t.sub;
     $('#r-title').textContent = t.title;
     $('#r-cake').src = 'assets/cake' + t.cake + '.webp';
-    // avoid repeating the same word twice in one sentence ("…간식'에서 간식에 담긴…")
-    $('#r-desc').textContent = t.desc(phrase, phrase.indexOf(kw) >= 0 ? t.slot : kw);
+    $('#r-desc').textContent = t.desc(phrase, kw);
     var chips = $('#r-chips'); chips.innerHTML = '';
     t.chips.concat([kw]).forEach(function (c) {
       var el = document.createElement('span'); el.className = 'chip'; el.textContent = c; chips.appendChild(el);
