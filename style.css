@@ -34,7 +34,7 @@ button{font-family:inherit;border:0;cursor:pointer;background:none}
 /* ---------- main ---------- */
 .title{position:absolute;left:0;right:0;top:168px;text-align:center;font-family:var(--en);font-weight:500;
   font-size:78px;line-height:112px;letter-spacing:-1px;color:var(--text);white-space:nowrap;padding-left:16px}
-.cap{position:absolute;left:698px;top:0px;width:43px;height:auto;transform:rotate(5deg)}
+.cap{position:absolute;left:702px;top:3px;width:43px;height:auto;transform:rotate(5deg)}
 .subtitle{position:absolute;left:0;right:0;top:291px;text-align:center;font-weight:600;font-size:26.8px;line-height:42px;color:var(--text)}
 
 .label{position:absolute;left:101px;font-weight:500;color:var(--gray);white-space:nowrap}
